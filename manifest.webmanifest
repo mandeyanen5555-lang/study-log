@@ -1,0 +1,11 @@
+{
+  "name": "Study Log - 勉強記録",
+  "short_name": "Study Log",
+  "description": "勉強時間と科目別の学習配分を記録するアプリ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#111827",
+  "lang": "ja",
+  "icons": []
+}

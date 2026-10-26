@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="勉強時間と科目別の学習配分を記録するアプリ">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Study Log - 勉強記録</title>
+<style>
+:root{color-scheme:light;--bg:#f4f7fb;--panel:#ffffff;--panel2:#edf2ff;--text:#172033;--muted:#68758d;--line:#dce3ef;--accent:#536dfe;--accent2:#0d9b78;--danger:#c83e58;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#edf2ff 0%,var(--bg) 320px);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Noto Sans JP",sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;color:var(--text);background:var(--panel2);border-radius:12px;padding:11px 14px;font-weight:650}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);color:#ffffff}button.ghost{background:transparent;border:1px solid var(--line)}button.danger{color:var(--danger);background:transparent;border:1px solid #6d3445}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 100px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 20px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#9aa8ff,#64e6c0);display:grid;place-items:center;color:#ffffff;font-weight:900;font-size:21px}.eyebrow{color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase}.brand h1{font-size:22px;margin:0}.top .today{font-size:12px;color:var(--muted);text-align:right}
+.tabs{display:flex;gap:8px;padding:5px;background:#e8edf7;border:1px solid var(--line);border-radius:15px;margin-bottom:18px}.tab{flex:1;background:transparent;color:var(--muted);padding:10px 8px}.tab.active{background:#ffffff;color:var(--text);box-shadow:0 1px 4px #1a2a4a14}
+.page{display:none}.page.active{display:block}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{background:#ffffff;border:1px solid var(--line);border-radius:var(--radius);padding:17px;min-width:0;box-shadow:0 12px 30px #00000012}.card h2,.card h3{margin:0 0 12px}.card h2{font-size:17px}.card h3{font-size:14px;color:var(--muted);font-weight:600}.muted{color:var(--muted)}.big{font-size:30px;font-weight:800;letter-spacing:-.04em;line-height:1.2}.unit{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:0}.sub{font-size:12px;color:var(--muted);margin-top:7px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 12px}.section-head h2{font-size:18px;margin:0}.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;background:#e8edff;color:#4055c5;font-size:12px}.timer{text-align:center;padding:24px 18px}.timer-display{font-variant-numeric:tabular-nums;font-size:clamp(42px,12vw,64px);font-weight:800;letter-spacing:-.05em;margin:10px 0 18px}.timer-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.timer-controls button{min-width:100px}.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.field label{font-size:13px;color:var(--muted);font-weight:600}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#ffffff;color:var(--text);border-radius:11px;padding:11px 12px;min-width:0}.field textarea{min-height:75px;resize:vertical}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions>*{flex:1}.bar-chart{height:220px;width:100%;display:block;overflow:visible}.legend{display:grid;gap:10px}.legend-row{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:9px;align-items:center;font-size:13px}.dot{width:10px;height:10px;border-radius:3px}.legend-row strong{font-variant-numeric:tabular-nums}.pie-wrap{display:flex;align-items:center;gap:18px}.pie{width:min(42vw,190px);min-width:120px;aspect-ratio:1}.pie-center{font-size:17px;font-weight:800;fill:var(--text)}.pie-small{font-size:10px;fill:var(--muted)}.empty{color:var(--muted);font-size:13px;text-align:center;padding:22px 8px}.records{display:grid;gap:8px}.record{display:flex;gap:12px;align-items:center;border:1px solid var(--line);background:#ffffff;border-radius:13px;padding:12px}.record-main{flex:1;min-width:0}.record-title{font-weight:700;overflow-wrap:anywhere}.record-meta{font-size:12px;color:var(--muted)}.record-time{font-weight:800;white-space:nowrap}.record button{padding:6px 9px;font-size:12px}.notice{font-size:12px;color:var(--muted);margin-top:10px}.hidden{display:none!important}.footer{margin-top:24px;text-align:center;color:var(--muted);font-size:11px}.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#172033;color:#ffffff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;box-shadow:0 8px 24px #0005;z-index:10}
+@media(min-width:700px){.wrap{padding-top:28px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.analysis-grid{grid-template-columns:1.15fr .85fr}}@media(max-width:480px){.wrap{padding:14px 12px 95px}.card{padding:14px}.grid{gap:9px}.big{font-size:26px}.pie-wrap{flex-direction:column;align-items:stretch}.pie{align-self:center;width:170px}.tabs{gap:4px}.tab{font-size:13px}.form-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">S</div><div><div class="eyebrow">STUDY TRACKER</div><h1>Study Log</h1></div></div>
+    <div class="today" id="today"></div>
+  </header>
+  <nav class="tabs" aria-label="メインメニュー">
+    <button class="tab active" data-page="home">ホーム</button>
+    <button class="tab" data-page="analysis">学習分析</button>
+    <button class="tab" data-page="records">記録一覧</button>
+  </nav>
+
+  <main id="home" class="page active">
+    <div class="grid three">
+      <section class="card"><h3>今日の学習</h3><div class="big" id="todayHours">0<span class="unit"> 分</span></div><div class="sub" id="todayCount">まだ記録がありません</div></section>
+      <section class="card"><h3>今週の学習</h3><div class="big" id="weekHours">0<span class="unit"> 時間</span></div><div class="sub" id="weekGoalText">週間目標：10時間</div></section>
+      <section class="card"><h3>累計学習時間</h3><div class="big" id="allHours">0<span class="unit"> 時間</span></div><div class="sub" id="allCount">0回の学習記録</div></section>
+    </div>
+
+    <div class="section-head"><h2>学習タイマー</h2><span class="pill" id="timerStatus">● 待機中</span></div>
+    <section class="card timer">
+      <div class="field" style="max-width:360px;margin:0 auto"><label for="timerSubject">勉強する科目</label><select id="timerSubject"></select></div>
+      <div class="timer-display" id="timerDisplay">00:00:00</div>
+      <div class="timer-controls"><button class="primary" id="startBtn">▶ 開始</button><button id="pauseBtn" class="ghost" disabled>一時停止</button><button id="finishBtn" disabled>記録して終了</button></div>
+      <div class="notice">タイマーを終了すると、選択中の科目の学習記録として保存します。</div>
+    </section>
+
+    <div class="section-head"><h2>手動で記録</h2><span class="muted" style="font-size:12px">タイマーを使わない場合</span></div>
+    <section class="card">
+      <form id="manualForm">
+        <div class="form-row">
+          <div class="field"><label for="manualDate">日付</label><input id="manualDate" type="date" required></div>
+          <div class="field"><label for="manualMinutes">勉強時間（分）</label><input id="manualMinutes" type="number" min="1" max="1440" placeholder="例：45" required></div>
+        </div>
+        <div class="field"><label for="manualSubject">科目</label><select id="manualSubject"></select></div>
+        <div class="field"><label for="manualNote">学習内容・メモ（任意）</label><textarea id="manualNote" placeholder="例：判断推理の対応関係を15問"></textarea></div>
+        <button class="primary" type="submit" style="width:100%">＋ 学習記録を保存</button>
+      </form>
+    </section>
+    <div class="section-head"><h2>最近の記録</h2><button class="ghost" data-goto="records">すべて見る →</button></div>
+    <div class="records" id="recentRecords"></div>
+  </main>
+
+  <main id="analysis" class="page">
+    <div class="section-head"><h2>学習時間の推移</h2><span class="pill">棒グラフ</span></div>
+    <section class="card">
+      <div class="actions" style="margin-bottom:12px"><button class="primary" id="weekMode">週表示</button><button class="ghost" id="monthMode">月表示</button></div>
+      <div class="muted" id="chartCaption" style="font-size:13px;margin-bottom:4px">今週・日別の学習時間</div>
+      <svg id="timeChart" class="bar-chart" viewBox="0 0 600 230" role="img" aria-label="学習時間の棒グラフ"></svg>
+      <div class="grid" style="margin-top:8px">
+        <div><div class="muted" style="font-size:12px" id="periodLabel">今週の合計</div><div class="big" style="font-size:23px" id="periodTotal">0時間</div></div>
+        <div><div class="muted" style="font-size:12px">1日平均</div><div class="big" style="font-size:23px" id="periodAverage">0分</div></div>
+      </div>
+      <div class="notice">週表示は月〜日、月表示はその月の日別で集計します。</div>
+    </section>
+
+    <div class="section-head"><h2>科目別の学習配分</h2><span class="pill">円グラフ</span></div>
+    <section class="card">
+      <div class="actions" style="margin-bottom:14px"><button class="primary" id="pieWeek">今週</button><button class="ghost" id="pieMonth">今月</button><button class="ghost" id="pieAll">全期間</button></div>
+      <div class="pie-wrap">
+        <svg class="pie" id="pieChart" viewBox="0 0 200 200" role="img" aria-label="科目別学習時間の円グラフ"></svg>
+        <div class="legend" id="pieLegend" style="flex:1"></div>
+      </div>
+      <div class="notice">各科目の割合は、選択した期間の学習時間合計に対する比率です。</div>
+    </section>
+    <div class="section-head"><h2>週間目標</h2></div>
+    <section class="card">
+      <div class="form-row" style="align-items:end">
+        <div class="field" style="margin:0"><label for="goalInput">目標時間（時間／週）</label><input id="goalInput" type="number" min="1" max="168" value="10"></div>
+        <button class="primary" id="saveGoal">目標を保存</button>
+      </div>
+      <div style="height:10px;background:#e8edf5;border-radius:999px;overflow:hidden;margin-top:16px"><div id="goalBar" style="height:100%;width:0%;background:linear-gradient(90deg,#8b9cff,#6ee7c2);border-radius:999px"></div></div>
+      <div class="sub" id="goalProgress">今週 0 / 10 時間</div>
+    </section>
+  </main>
+
+  <main id="records" class="page">
+    <div class="section-head"><h2>学習記録一覧</h2><button class="ghost" id="exportBtn">CSVを書き出す</button></div>
+    <section class="card" style="margin-bottom:12px">
+      <div class="form-row">
+        <div class="field" style="margin:0"><label for="filterSubject">科目で絞り込み</label><select id="filterSubject"></select></div>
+        <div class="field" style="margin:0"><label for="filterMonth">月で絞り込み</label><input type="month" id="filterMonth"></div>
+      </div>
+    </section>
+    <div class="section-head"><h2>科目のカスタマイズ</h2><span class="muted" style="font-size:12px">自分の科目を追加</span></div>
+    <section class="card" style="margin-bottom:14px">
+      <form id="subjectForm">
+        <div class="form-row">
+          <div class="field" style="margin:0"><label for="newSubject">追加する科目名</label><input id="newSubject" maxlength="30" placeholder="例：時事問題" required></div>
+          <button class="primary" type="submit">＋ 科目を追加</button>
+        </div>
+      </form>
+      <div class="sub" style="margin:12px 0 8px">現在の科目</div>
+      <div id="subjectManager" class="legend"></div>
+      <div class="notice">標準科目は残したまま、追加した科目は削除できます。科目を削除しても過去の記録は消えません。</div>
+    </section>
+    <div class="section-head"><h2>記録</h2></div>
+    <div class="records" id="allRecords"></div>
+    <div class="footer">記録はこの端末のブラウザ内に保存されます。ブラウザのデータ消去で消える場合があるため、定期的にCSVを書き出してください。</div>
+  </main>
+</div>
+<div id="toast" class="toast hidden" role="status"></div>
+<script>
+(() => {
+const COLORS = ['#8b9cff','#6ee7c2','#ffbd69','#c49bff','#ff8d9b','#5bc0eb','#b4e197','#f4e285'];
+const DEFAULT_SUBJECTS = ['数的処理','文章理解','憲法・法律','経済学','行政・政治','その他'];
+const $ = id => document.getElementById(id);
+const todayISO = () => {const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const safeParse = (s,fallback) => {try{return JSON.parse(s)||fallback}catch{return fallback}};
+let records = safeParse(localStorage.getItem('studylog_records'),[]);
+let subjects = safeParse(localStorage.getItem('studylog_subjects'),DEFAULT_SUBJECTS);
+const defaultSubjects = DEFAULT_SUBJECTS.slice();
+let goal = Number(localStorage.getItem('studylog_goal')||10);
+let chartMode = 'week', pieMode = 'week';
+let timer = {running:false,startedAt:null,elapsed:0,interval:null};
+let toastTimeout;
+function persist(){localStorage.setItem('studylog_records',JSON.stringify(records));localStorage.setItem('studylog_subjects',JSON.stringify(subjects));localStorage.setItem('studylog_goal',String(goal))}
+function notify(msg){$('toast').textContent=msg;$('toast').classList.remove('hidden');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>$('toast').classList.add('hidden'),2200)}
+function fmtHours(min){return `${(min/60).toFixed(min%60===0?0:1)}時間`}
+function fmtDuration(min){const h=Math.floor(min/60),m=min%60;return h?`${h}時間${m?m+'分':''}`:`${m}分`}
+function dateLabel(s){const d=new Date(s+'T00:00:00');return `${d.getMonth()+1}/${d.getDate()}`}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function startOfWeek(d=new Date()){const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x}
+function iso(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function inRange(date,start,end){return date>=iso(start)&&date<=iso(end)}
+function sumRecords(list){return list.reduce((n,r)=>n+Number(r.minutes||0),0)}
+function filteredForPeriod(mode){
+ const now=new Date(); let start,end;
+ if(mode==='week'){start=startOfWeek(now);end=new Date(start);end.setDate(end.getDate()+6)}
+ else if(mode==='month'){start=new Date(now.getFullYear(),now.getMonth(),1);end=new Date(now.getFullYear(),now.getMonth()+1,0)}
+ else return records.slice();
+ return records.filter(r=>inRange(r.date,start,end));
+}
+function options(select,includeAll=false){select.innerHTML=(includeAll?'<option value="__all">すべての科目</option>':'')+subjects.map(s=>`<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('')}
+function refreshSubjectSelects(){['timerSubject','manualSubject','filterSubject'].forEach(id=>options($(id),id==='filterSubject'))}
+function addRecord({date,minutes,subject,note='',source='manual'}){
+ if(!Number.isFinite(minutes)||minutes<1)return;
+ records.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),date,minutes:Math.round(minutes),subject,note,source,createdAt:new Date().toISOString()});
+ records.sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt.localeCompare(a.createdAt));persist();renderAll();notify('学習記録を保存しました');
+}
+function recordHTML(r,withDelete=true){return `<div class="record"><div class="dot" style="background:${COLORS[Math.max(0,subjects.indexOf(r.subject))%COLORS.length]}"></div><div class="record-main"><div class="record-title">${escapeHTML(r.subject)}</div><div class="record-meta">${dateLabel(r.date)}${r.note?' ・ '+escapeHTML(r.note):''}</div></div><div class="record-time">${fmtDuration(r.minutes)}</div>${withDelete?`<button class="ghost" data-delete="${escapeHTML(r.id)}" aria-label="記録を削除">削除</button>`:''}</div>`}
+function renderSubjectManager(){
+ const host=$('subjectManager');
+ host.innerHTML=subjects.map((s,i)=>{
+  const isDefault=defaultSubjects.includes(s);
+  return `<div class="record"><span class="dot" style="background:${COLORS[i%COLORS.length]}"></span><div class="record-main"><div class="record-title">${escapeHTML(s)}</div><div class="record-meta">${isDefault?'標準科目':'追加した科目'}</div></div>${isDefault?'<span class="pill">標準</span>':`<button class="danger" data-remove-subject="${escapeHTML(s)}">削除</button>`}</div>`;
+ }).join('');
+}
+function renderRecords(){
+ const recent=records.slice(0,4);$('recentRecords').innerHTML=recent.length?recent.map(r=>recordHTML(r,false)).join(''):'<div class="empty">記録はまだありません。タイマーか手動入力で追加しましょう。</div>';
+ const sf=$('filterSubject').value||'__all',mf=$('filterMonth').value||'';
+ const filtered=records.filter(r=>(sf==='__all'||r.subject===sf)&&(!mf||r.date.startsWith(mf)));
+ $('allRecords').innerHTML=filtered.length?filtered.map(r=>recordHTML(r,true)).join(''):'<div class="card empty">条件に一致する記録がありません。</div>';
+}
+function renderHome(){
+ const today=records.filter(r=>r.date===todayISO()),week=filteredForPeriod('week');
+ $('todayHours').innerHTML=`${sumRecords(today)}<span class="unit"> 分</span>`;$('todayCount').textContent=`${today.length}件の記録`;
+ $('weekHours').innerHTML=`${(sumRecords(week)/60).toFixed(sumRecords(week)%60?1:0)}<span class="unit"> 時間</span>`;
+ $('weekGoalText').textContent=`週間目標：${goal}時間`;
+ $('allHours').innerHTML=`${(sumRecords(records)/60).toFixed(sumRecords(records)%60?1:0)}<span class="unit"> 時間</span>`;$('allCount').textContent=`${records.length}回の学習記録`;
+}
+function svgEl(name,attrs={},txt=''){const e=document.createElementNS('http://www.w3.org/2000/svg',name);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(txt)e.textContent=txt;return e}
+function renderBarChart(){
+ const svg=$('timeChart');svg.innerHTML='';const now=new Date();let items=[];
+ if(chartMode==='week'){
+  const start=startOfWeek(now);items=Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);const key=iso(d);return {label:['月','火','水','木','金','土','日'][i],minutes:sumRecords(records.filter(r=>r.date===key))}});
+  $('chartCaption').textContent='今週・曜日別の学習時間';$('periodLabel').textContent='今週の合計';
+ }else{
+  const start=new Date(now.getFullYear(),now.getMonth(),1),days=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  items=Array.from({length:days},(_,i)=>{const d=new Date(start);d.setDate(i+1);const key=iso(d);return {label:String(i+1),minutes:sumRecords(records.filter(r=>r.date===key))}});
+  $('chartCaption').textContent=`${now.getFullYear()}年${now.getMonth()+1}月・日別の学習時間`;$('periodLabel').textContent='今月の合計';
+ }
+ const total=items.reduce((n,x)=>n+x.minutes,0),avg=items.length?total/items.length:0,max=Math.max(60,...items.map(x=>x.minutes));const W=600,H=230,left=35,right=10,top=15,bottom=34,plotH=H-top-bottom,plotW=W-left-right;
+ [0,.25,.5,.75,1].forEach(p=>{const y=top+plotH*(1-p);svg.append(svgEl('line',{x1:left,y1:y,x2:W-right,y2:y,stroke:'#e0e6f0','stroke-width':1}));if(p<1)svg.append(svgEl('text',{x:left-7,y:y+4,'text-anchor':'end',fill:'#7b879d','font-size':10},String(Math.round(max*p/60*10)/10)))});
+ const step=plotW/items.length,bw=Math.max(3,step*.62);
+ items.forEach((it,i)=>{const h=it.minutes/max*plotH,x=left+i*step+(step-bw)/2,y=top+plotH-h;const rect=svgEl('rect',{x,y,width:bw,height:Math.max(0,h),rx:Math.min(5,bw/3),fill:it.minutes?'#8b9cff':'#303a57'});rect.append(svgEl('title',{},`${it.label}: ${fmtDuration(it.minutes)}`));svg.append(rect);if(chartMode==='week'||items.length<=15||i%3===0||i===items.length-1)svg.append(svgEl('text',{x:left+i*step+step/2,y:H-12,'text-anchor':'middle',fill:'#7b879d','font-size':items.length>20?9:11},it.label))});
+ $('periodTotal').textContent=fmtHours(total);$('periodAverage').textContent=avg>=60?fmtHours(avg):`${Math.round(avg)}分`;
+}
+function renderPie(){
+ const list=filteredForPeriod(pieMode);const totals=subjects.map(s=>({subject:s,minutes:sumRecords(list.filter(r=>r.subject===s))})).filter(x=>x.minutes>0).sort((a,b)=>b.minutes-a.minutes);
+ const sum=sumRecords(list),svg=$('pieChart');svg.innerHTML='';const legend=$('pieLegend');legend.innerHTML='';
+ if(!sum){svg.append(svgEl('circle',{cx:100,cy:100,r:72,fill:'#e9eef7'}));svg.append(svgEl('text',{x:100,y:97,'text-anchor':'middle',class:'pie-center'},'データなし'));svg.append(svgEl('text',{x:100,y:114,'text-anchor':'middle',class:'pie-small'},'記録すると表示'));legend.innerHTML='<div class="empty">選択した期間の記録がありません。</div>';return}
+ let angle=-Math.PI/2;
+ totals.forEach((item,i)=>{const portion=item.minutes/sum*2*Math.PI;const end=angle+portion;const p1=[100+72*Math.cos(angle),100+72*Math.sin(angle)],p2=[100+72*Math.cos(end),100+72*Math.sin(end)];const large=portion>Math.PI?1:0;const d=`M 100 100 L ${p1[0]} ${p1[1]} A 72 72 0 ${large} 1 ${p2[0]} ${p2[1]} Z`;svg.append(svgEl('path',{d,fill:COLORS[subjects.indexOf(item.subject)%COLORS.length],stroke:'#ffffff','stroke-width':2}));angle=end;
+  const pct=item.minutes/sum*100;const row=document.createElement('div');row.className='legend-row';row.innerHTML=`<span class="dot" style="background:${COLORS[subjects.indexOf(item.subject)%COLORS.length]}"></span><span>${escapeHTML(item.subject)}<br><span class="muted">${fmtDuration(item.minutes)}</span></span><strong>${pct.toFixed(1)}%</strong>`;legend.append(row);
+ });
+ svg.append(svgEl('circle',{cx:100,cy:100,r:42,fill:'#ffffff'}));svg.append(svgEl('text',{x:100,y:96,'text-anchor':'middle',class:'pie-small'},'合計時間'));svg.append(svgEl('text',{x:100,y:116,'text-anchor':'middle',class:'pie-center'},fmtHours(sum)));
+}
+function renderGoal(){ $('goalInput').value=goal;const min=sumRecords(filteredForPeriod('week')),pct=Math.min(100,min/(goal*60)*100);$('goalBar').style.width=pct+'%';$('goalProgress').textContent=`今週 ${(min/60).toFixed(1)} / ${goal} 時間（${Math.round(pct)}%）`; }
+function renderAll(){renderHome();renderBarChart();renderPie();renderGoal();renderRecords();renderSubjectManager()}
+function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===name));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.page===name));window.scrollTo({top:0,behavior:'smooth'})}
+function elapsedNow(){return timer.elapsed+(timer.running?Date.now()-timer.startedAt:0)}
+function renderTimer(){let sec=Math.floor(elapsedNow()/1000);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;$('timerDisplay').textContent=[h,m,s].map(x=>String(x).padStart(2,'0')).join(':');$('startBtn').disabled=timer.running;$('pauseBtn').disabled=!timer.running;$('finishBtn').disabled=sec<1;$('timerStatus').textContent=timer.running?'● 計測中':sec?'● 一時停止中':'● 待機中';}
+function startTimer(){if(timer.running)return;timer.running=true;timer.startedAt=Date.now();timer.interval=setInterval(renderTimer,500);renderTimer()}
+function pauseTimer(){if(!timer.running)return;timer.elapsed+=Date.now()-timer.startedAt;timer.running=false;clearInterval(timer.interval);renderTimer()}
+function finishTimer(){pauseTimer();const minutes=Math.round(timer.elapsed/60000);if(minutes<1){notify('1分未満のため記録しませんでした');resetTimer();return}addRecord({date:todayISO(),minutes,subject:$('timerSubject').value,note:'タイマー記録',source:'timer'});resetTimer()}
+function resetTimer(){clearInterval(timer.interval);timer={running:false,startedAt:null,elapsed:0,interval:null};renderTimer()}
+function exportCSV(){const rows=[['日付','科目','時間(分)','学習内容','記録方法'],...records.map(r=>[r.date,r.subject,r.minutes,r.note,r.source==='timer'?'タイマー':'手動'])];const csv='\uFEFF'+rows.map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`study-log-${todayISO()}.csv`;a.click();URL.revokeObjectURL(url);notify('CSVを書き出しました')}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.goto)));
+$('startBtn').addEventListener('click',startTimer);$('pauseBtn').addEventListener('click',pauseTimer);$('finishBtn').addEventListener('click',finishTimer);
+$('manualForm').addEventListener('submit',e=>{e.preventDefault();addRecord({date:$('manualDate').value,minutes:Number($('manualMinutes').value),subject:$('manualSubject').value,note:$('manualNote').value.trim()});$('manualMinutes').value='';$('manualNote').value=''});
+$('weekMode').addEventListener('click',()=>{chartMode='week';$('weekMode').className='primary';$('monthMode').className='ghost';renderBarChart()});
+$('monthMode').addEventListener('click',()=>{chartMode='month';$('monthMode').className='primary';$('weekMode').className='ghost';renderBarChart()});
+[['pieWeek','week'],['pieMonth','month'],['pieAll','all']].forEach(([id,mode])=>$(id).addEventListener('click',()=>{pieMode=mode;[['pieWeek','week'],['pieMonth','month'],['pieAll','all']].forEach(([b,m])=>$(b).className=m===mode?'primary':'ghost');renderPie()}));
+$('saveGoal').addEventListener('click',()=>{const v=Number($('goalInput').value);if(v<1||v>168||!Number.isFinite(v)){notify('目標は1〜168時間で設定してください');return}goal=v;persist();renderGoal();renderHome();notify('週間目標を保存しました')});
+$('filterSubject').addEventListener('change',renderRecords);$('filterMonth').addEventListener('change',renderRecords);$('exportBtn').addEventListener('click',exportCSV);
+$('subjectForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const name=$('newSubject').value.trim();
+ if(!name){notify('科目名を入力してください');return}
+ if(subjects.some(s=>s.toLocaleLowerCase()===name.toLocaleLowerCase())){notify('同じ名前の科目がすでにあります');return}
+ subjects.push(name);persist();refreshSubjectSelects();$('newSubject').value='';renderAll();notify('科目を追加しました');
+});
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-remove-subject]');
+ if(!b)return;
+ const name=b.dataset.removeSubject;
+ if(defaultSubjects.includes(name))return;
+ if(confirm(`科目「${name}」を一覧から削除しますか？過去の記録は残ります。`)){
+  subjects=subjects.filter(s=>s!==name);persist();refreshSubjectSelects();renderAll();notify('科目を削除しました');
+ }
+});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-delete]');if(!b)return;const r=records.find(x=>x.id===b.dataset.delete);if(r&&confirm(`${r.subject}・${fmtDuration(r.minutes)}の記録を削除しますか？`)){records=records.filter(x=>x.id!==r.id);persist();renderAll();notify('記録を削除しました')}});
+$('today').textContent=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+$('manualDate').value=todayISO();$('filterMonth').value=todayISO().slice(0,7);
+refreshSubjectSelects();renderAll();renderTimer();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>
